@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap"
+        rel="stylesheet"
+        />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .title_bar {
+            background: rgb(60, 30, 9);
+            color: antiquewhite;
+            padding:5px;
+            text-align: center;
+            font-size: large;
+            font-weight: bold;
+            font-family: 'Open Sans';
+            /* font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
+        }
+        .main_container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas: "items payment";
+            margin-top: 5px;
+            padding: 5px;
+            width: 100%;
+            font-family: 'Open Sans';
+            /* overflow: auto; // I can constrain go cards to a scrollable window quite easily
+            height: 320px; */
+        }
+        .items_area {
+            grid-area: items;
+        }
+        .payment_area {
+            grid-area: payment;
+        }
+        .sub_container {
+            display: grid;
+            grid-auto-rows: max-content;
+            width: 100%;
+        }
+        .card {
+            background-color: bisque;
+            margin: 10px;
+            padding: 20px;
+            display: grid;
+            border-radius: 4px;
+            box-shadow: 2px 2px 4px lightgrey;
+        }
+        .card_title {
+            text-transform: uppercase;
+            color: darkgoldenrod;
+            padding-bottom: 10px;
+        }
+        .item {
+            border-bottom: 1px solid darkgoldenrod;
+        }
+        .item:last-child {
+            border-bottom: 0;
+        }
+        .item_quantity {
+            /* width: 50px; */
+        }
+        .item_name {
+            font-weight:bold;
+        }
+        .item_price {
+            font-weight: bold;
+            text-align: right;
+        }
+        .item_details {
+            color: darkgoldenrod;
+        }
+        .item_row {
+            display: grid;
+            grid-template-columns: 36px 1fr 50px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .input_box {
+            border: 1px solid darkgoldenrod;
+            border-radius: 15px;
+            position: relative;
+            height: 30px;
+            margin-bottom: 15px;
+        }
+        .input_label {
+            position: absolute;
+            left: 20px;
+            top: -9px;
+            color: darkgoldenrod;
+            border-left: 4px solid bisque;
+            border-right: 4px solid bisque;
+            background: bisque;
+            font-size: x-small;
+        }
+        .input_input {
+            position: absolute;
+            left: 10px;
+            top: 6px;
+            color: lightgoldenrodyellow;
+            border-radius: 3px;
+            border: 0px;
+            color: brown
+        }
+        .totals_container {
+            display: grid;
+            justify-content: center;
+            margin-top: 5px;
+            width: 100%;
+            font-family: 'Open Sans';
+        }
+        .totals_card {
+            margin: 5px;
+            padding: 20px;
+        }
+        .totals_line {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            margin-bottom: 20px;
+        }
+        .totals_type {
+            padding-right: 50px;
+        }
+        .totals_value {
+            padding-left: 50px;
+        }
+        .place_order_container {
+            display: grid;
+            justify-content: center;
+            margin-top: 5px;
+            width: 100%;
+            font-family: 'Open Sans';
+        }
+        .place_order {
+            border-radius: 50px;
+            background:darkgoldenrod;
+            color: lightgoldenrodyellow;
+            font-size: x-large;
+            border: 1px;
+        }
+        .totals {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="title_bar">
+        Coffee
+    </nav>
+    <div class="main_container">
+        <div class="sub_container items_area">
+            <div class="card">
+                <div class="card_title">
+                    Items
+                </div>
+                <div class="item">
+                    <div class="item_row">
+                        <div class="item_quantity">1x</div>
+                        <div class="item_name">Cappucino</div>
+                        <div class="item_price">$6.00</div>
+                    </div>
+                    <div class="item_row">
+                        <div class="item_quantity"></div>
+                        <div class="item_details">Light Foam</div>
+                        <div class="item_price"></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="item_row">
+                        <div class="item_quantity">1x</div>
+                        <div class="item_name">Cappucino</div>
+                        <div class="item_price">$7.90</div>
+                    </div>
+                    <div class="item_row">
+                        <div class="item_quantity"></div>
+                        <div class="item_details">Alond Milk</div>
+                        <div class="item_price"></div>
+                    </div>
+                    <div class="item_row">
+                        <div class="item_quantity"></div>
+                        <div class="item_details">Double Espresso Shot</div>
+                        <div class="item_price"></div>
+                    </div>
+                </div>
+                <!-- <div class="item">
+                    <div class="item_row">
+                        <div class="item_quantity">1x</div>
+                        <div class="item_name">Cappucino</div>
+                        <div class="item_price">$free!</div>
+                    </div>
+                    <div class="item_row">
+                        <div class="item_quantity"></div>
+                        <div class="item_details">Alond Milk</div>
+                        <div class="item_price"></div>
+                    </div>
+                    <div class="item_row">
+                        <div class="item_quantity"></div>
+                        <div class="item_details">Double Espresso Shot</div>
+                        <div class="item_price"></div>
+                    </div>
+                </div> -->
+                <div class="item">
+                    <div class="item_row">
+                        <div class="item_quantity">1x</div>
+                        <div class="item_name">Cappucino</div>
+                        <div class="item_price">$5.37</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sub_container payment_area">
+            <div class="card">
+                <div class="card_title">
+                    Name
+                </div>
+                <div class="input_box">
+                    <label class="input_label">
+                        Name for order
+                    </label>
+                    <input class="input_input" type="text" id="name" name="name" required>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card_title">
+                    Payment
+                </div>
+                <div class="input_box">
+                    <label class="input_label">
+                        Card number
+                    </label>
+                    <input class="input_input" type="text" id="card" name="card" required>
+                </div>
+                <div class="input_box">
+                    <label class="input_label">
+                        CCV number
+                    </label>
+                    <input class="input_input" type="text" id="ccv" name="ccv" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="totals_container">
+        <div class="totals_card">
+            <div class="totals_line">
+                <div class="totals_type">Subtotal:</div><div class="totals_value">$19.27</div>
+            </div>
+            <div class="totals_line">
+                <div class="totals_type">Tax:</div><div class="totals_value">$0.96</div>
+            </div>
+            <div class="totals_line totals">
+                <div class="totals_type">Total:</div><div class="totals_value">$20.23</div>
+            </div>
+        </div>
+    </div>
+    <div class="place_order_container">
+        <button class="place_order">
+            Place order
+        </button>
+    </div>
+</body>
+</html>
