@@ -1,0 +1,87 @@
+* {
+    box-sizing: border-box;
+}
+.calculator {
+    width: 200px;
+    height: 350px;
+    font-size: xx-large;
+}
+.screen {
+    background-color: black;
+    color: white;
+    height: 60px;
+    font-family: 'Courier New', Courier, monospace;
+}
+.keypad {
+    background-color: grey;
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-areas: 
+      "c c delete divide"
+      "k7 k8 k9 multiply"
+      "k4 k5 k6 minus"
+      "k1 k2 k3 plus"
+      "k0 k0 k0 equals"
+}
+.key {
+    background-color: lightgrey;
+    border-radius: 2px;
+    border-width: 1px;
+    margin: 2px;
+    text-align: center;
+}
+.key:hover {
+    background-color: white;
+}
+.key_c {
+    grid-area: c;
+}
+.key_delete {
+    grid-area: delete;
+}
+.key_devide {
+    grid-area: divide;
+}
+.key_7 {
+    grid-area: k7;
+}
+.key_8 {
+    grid-area: k8;
+}
+.key_9 {
+    grid-area: k9;
+}
+.key_multiply {
+    grid-area: multiply;
+}
+.key_4 {
+    grid-area: k4;
+}
+.key_5 {
+    grid-area: k5;
+}
+.key_6 {
+    grid-area: k6;
+}
+.key_minus {
+    grid-area: minus;
+}
+.key_1 {
+    grid-area: k1;
+}
+.key_2 {
+    grid-area: k2;
+}
+.key_3 {
+    grid-area: k3;
+}
+.key_plus {
+    grid-area: plus;
+}
+.key_0 {
+    grid-area: k0;
+}
+.key_equals {
+    grid-area: equals;
+}
