@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gordle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap"
+        rel="stylesheet"
+        />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background-color: lightgray;
+        }
+        .title {
+            color: antiquewhite;
+            padding:5px;
+            text-align: center;
+            font-size: large;
+            font-weight: bold;
+            font-family: 'Open Sans';
+        }
+        .attempts_container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 100%;
+        }
+        .attempts {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            font-family: 'Open Sans';
+        }
+        .attempt {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            margin-top: 5px;
+            padding: 5px;
+            width: 130px;
+        }
+        .letter {
+            width: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">
+        GORDLE
+    </div>
+    <div class="attempts_container">
+        <div class="attempts">
+            <div class="attempt attempt_1">
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+            </div>
+            <div class="attempt attempt_2">
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+            </div>
+            <div class="attempt attempt_3">
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+            </div>
+            <div class="attempt attempt_4">
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+            </div>
+            <div class="attempt attempt_5">
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+            </div>
+            <div class="attempt attempt_6">
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+                <input class="letter letter_1" />
+            </div>
+        </div>
+    </div>
+    <div class="notifications">
+        Can you guess the 4 letter word?  Yellow = right letter, wrong place. Green = right letter, right place. (Each letter matched to jut one counterpart.)
+    </div>
+    <script src="./src/gordle.js"></script>
+</body>
+</html>
