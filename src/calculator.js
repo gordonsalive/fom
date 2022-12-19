@@ -4,15 +4,17 @@ let lastNumber = 0;
 let currentOperator = '';
 let lastKeyWasEqualsToggle = false;
 let lastKeyWasEqualsToggleNumber = 0;
-const screenText = () => screen.innerText;
-const updateScreenText = (newText) => screen.innerText = newText;
+const screenText = () => (screen.innerText) ? screen.innerText : '0';
+const updateScreenText = (newText) => screen.innerText = (newText) ? newText : '0';
 // main method to handle key press
 const handleKeyPress = (key) => {
     const operators = ['+', '-', '*', '/'];
     const numberKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     if (numberKeys.includes(key)) {
-        // just add number to end of screen number
-        updateScreenText(screenText() + key);
+        // just add number to end of screen number (just replace it if it is currently 0)
+        const currentValue = screenText();
+        const newValue = currentValue === '0' ? key : currentValue + key;
+        updateScreenText(newValue);
     } else if (key === '←') {
         // just add number to end of screen number
         updateScreenText(screenText().slice(0, -1));
