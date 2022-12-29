@@ -19,40 +19,83 @@
 ** Useful API: github.com/toddmotto/public-apis
 **             https://words.dev-apis.com/word-of-the-day
 **             https://words.dev-apis.com/validate-word
+**
+** fetch API reference from (https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch):
+const data = { username: 'example' };
 */
-console.log('hello');
+
+// TODO: jump to next input in attempt when they type a letter
+// TODO: better styling
 
 const attempts = document.querySelectorAll('.attempt');
 const allLetters = document.querySelectorAll('.letter');
 const notifications = document.querySelector('.notifications');
+const resetButton = document.querySelector('.reset_button');
 
-let todaysWord;  // once we get todays word, we will cache it here
-let attemptCount = 0;
+const cache = {};
 
-const isTodaysWord = (word) => {
-    const fetchTodaysWord = () => {
-        return responseJson = {
-            "word": "cater",
-            "puzzleNumber": 267
-        };
+const resetCache = (cache) => {
+    let attemptCount = 0;
+    let todaysWord;
+
+    const fetchTodaysWord = async () => {
+        // const resp = await Promise.resolve({
+        //     "word": "yells",
+        //     // "word": "cater",
+        //     "puzzleNumber": 267
+        // });
+        try {
+            const response = await fetch('https://words.dev-apis.com/word-of-the-day'); // simple GET fetch
+            const data = await response.json();
+            todaysWord = data.word.toUpperCase();
+            return todaysWord;
+        } catch (e) {
+            throw 'error fetching word of the day. ' + e;
+        }
     };
 
-    if (!todaysWord) {
-        todaysWord = fetchTodaysWord().word.toUpperCase();
+    cache.isTodaysWord = async (word) => {
+        if (!todaysWord) {
+            await fetchTodaysWord();
+        }
+        return (word === todaysWord);
     }
-    return (word.toUpperCase() === todaysWord.toUpperCase());
-}
-
-const isValidWord = (word) => {
-    const fetchValidateWord = (word) => {
-        return responseJson = {
-            "word": "crane",
-            "validWord": true
-        };
+    cache.todaysWord = async () => {
+        if (!todaysWord) {
+            await fetchTodaysWord();
+        }
+        return todaysWord;
     };
 
-    return fetchValidateWord(word).validWord;
+    cache.isValidWord = async (word) => {
+        const fetchValidateWord = async (word) => {
+            // return Promise.resolve({
+            //     "word": "crane",
+            //     "validWord": true
+            // });
+            try {
+                const response = await fetch('https://words.dev-apis.com/validate-word', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({word: word})
+                });
+                return await response.json();
+            } catch (e) {
+                throw 'error fetching if word is valid. ' + e;
+            }
+        };
+
+        const resp = await fetchValidateWord(word);
+        return resp.validWord;
+    };
+
+    cache.incrementAttemptCount = () => attemptCount++;
+    cache.attemptCount = () => attemptCount;
 };
+
+resetCache(cache);
 
 const letterKeyDownHandler = (event) => {
     // handle letters being typed
@@ -72,34 +115,40 @@ const letterKeyDownHandler = (event) => {
     }
 }
 
-const allGreen = (attempt) => {
-    Array.from(attempt.children).forEach((elem) => elem.style.backgroundColor = "green");
-}
-
 const colourAttempt = (guess, todaysWord, attempt) => {
     const todaysWordArray = Array.from(todaysWord).map((letter) => { return { letter, found: false } });
+    const markLetterFound = (guessLetterindex, todaysWordIndex, color) => {
+        if (!["green", "yellow"].includes(color)) {
+            throw 'unexpected color for found letter matching';
+        }
+        guess[guessLetterindex].colour = color;
+        todaysWordArray[todaysWordIndex].found = true;
+    }
     // find exact matches first
     guess.forEach((guessLetter, index) => {
         // if the letter match, update the colour to green and mark the letter as found
         if (guessLetter.letter === todaysWordArray[index].letter) {
-            guess[index].colour = "green";
-            todaysWordArray[index].found = true;
+            markLetterFound(index, index, "green");
         }
     });
     // find any non-exact matches
     guess.forEach((guessLetter, i) => {
+        const gl = guessLetter.letter;
         // skip greens
         if (guessLetter.colour !== "green") {
             // if this letter in todays word and not found?
-            const isThere = todaysWordArray.some((wordLetter) => (guessLetter.letter === wordLetter.letter) && (wordLetter.found === false));
+            const isThere = todaysWordArray.some((wordLetter) => (gl === wordLetter.letter) && (wordLetter.found === false));
             if (isThere) {
                 // find the first match and mark as yellow and found
-                todaysWordArray.forEach((wordLetter, j) => {
-                    if ((guessLetter.letter === wordLetter.letter) && (wordLetter.found === false)) {
-                        guess[i].colour = "yellow";
-                        todaysWordArray[j].found = true;
+                todaysWordArray.every((wordLetter, j) => {
+                    const wl = wordLetter.letter;
+                    if ((gl === wl) && (wordLetter.found === false)) {
+                        markLetterFound(i, j, "yellow");
+                        return false; // stop iterating through array
+                    } else {
+                        return true;
                     }
-                })
+                });
             }
         }
     });
@@ -107,9 +156,13 @@ const colourAttempt = (guess, todaysWord, attempt) => {
     Array.from(attempt.children).forEach((elem, idx) => elem.style.backgroundColor = guess[idx].colour);
 }
 
-const letterChangeHandler = (event) => {
+const letterChangeHandler = async (event) => {
     const disableAttempt = (attempt) => Array.from(attempt.children).forEach((childInput) => childInput.disabled = true);
-    const disableAllAttempts = (attempts) => Array.from(attempts).forEach((attempt) => disableAttempt(attempt));
+    const disableAllAttempts = (attempts) => {
+        Array.from(attempts).forEach((attempt) => disableAttempt(attempt));
+        resetButton.hidden = false;
+    };
+    const allGreen = (attempt) => Array.from(attempt.children).forEach((elem) => elem.style.backgroundColor = "green")
 
     // trim the current letter if it is too long!  And ensure it is upper case!
     const thisLetter = event.target.value.toUpperCase();
@@ -128,33 +181,49 @@ const letterChangeHandler = (event) => {
         const guess = letters.map((letter) => { return { letter, colour: 'grey' } });
         const guessWord = guess.map((letter) => letter.letter).join('');
         // is it a valid word?
-        if (!isValidWord(guessWord)) {
+        const isValidWord = await cache.isValidWord(guessWord);
+        if (!isValidWord) {
             notifications.innerText = 'That is not a valid word - keep trying.';
             return;
         };
         // is it a wrong guess?
-        if (!isTodaysWord(guessWord)) {
-            attemptCount++;
-            if (attemptCount === 6) {
-                notifications.innerText = `That guess is incorrect - sorry, you are out of goes! The word was ${todaysWord}`;
+        const isTodaysWord = await cache.isTodaysWord(guessWord);
+        if (!isTodaysWord) {
+            cache.incrementAttemptCount();
+            if (cache.attemptCount() === 6) {
+                notifications.innerText = `That guess is incorrect - sorry, you are out of goes! The word was ${await cache.todaysWord()}`;
+                disableAllAttempts(attempts);
             } else {
                 notifications.innerText = `That guess is incorrect - keep trying!`;
             }
             // disable all the input fields in this row!
             disableAttempt(attempt);
-            colourAttempt(guess, todaysWord, attempt);
+            colourAttempt(guess, await cache.todaysWord(), attempt);
             return;
         }
         // they got it!
-        const goWord = (attemptCount) ? 'goes' : 'go';
-        notifications.innerText = `Well done, you got it right in ${attemptCount +1} ${goWord}!`;
+        const goWord = cache.attemptCount() ? 'goes' : 'go';
+        notifications.innerText = `Well done, you got it right in ${cache.attemptCount() + 1} ${goWord}!`;
         // diable all fields and play with colouring
         allGreen(attempt);
         disableAllAttempts(attempts);
     }
 }
 
+const resetPage = () => {
+    Array.from(attempts).forEach(
+        (attempt) => Array.from(attempt.children).forEach(
+            (childInput) => {
+                childInput.disabled = false;
+                childInput.style.backgroundColor = "";
+                childInput.value = "";
+            }));
+    notifications.innerText = "Can you guess the 5 letter word?";
+    resetButton.hidden = true;
+    resetCache(cache);
+};
+
 allLetters.forEach((letter) => letter.onchange = letterChangeHandler);
 allLetters.forEach((letter) => letter.onkeydown = letterKeyDownHandler);
-
+resetButton.onclick = () => resetPage();
 
