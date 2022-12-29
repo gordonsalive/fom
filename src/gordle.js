@@ -24,13 +24,14 @@
 const data = { username: 'example' };
 */
 
-// TODO: jump to next input in attempt when they type a letter
-// TODO: better styling
+// TODO: jump to next input in attempt when they type a letter ( element.focus() )
+// TODO: add spinner while fetch is happening
 
 const attempts = document.querySelectorAll('.attempt');
 const allLetters = document.querySelectorAll('.letter');
 const notifications = document.querySelector('.notifications');
 const resetButton = document.querySelector('.reset_button');
+const title = document.querySelector('.title');
 
 const cache = {};
 
@@ -206,7 +207,13 @@ const letterChangeHandler = async (event) => {
         notifications.innerText = `Well done, you got it right in ${cache.attemptCount() + 1} ${goWord}!`;
         // diable all fields and play with colouring
         allGreen(attempt);
+        Array.from(attempt.children).forEach((letterElem, i) => {
+            letterElem.classList.add('dancing_letters');
+            letterElem.style.animationDelay = `${i/5}s`;
+        });
         disableAllAttempts(attempts);
+        title.classList.add('happy_letters');
+        notifications.classList.add('happy_letters');
     }
 }
 
@@ -216,8 +223,12 @@ const resetPage = () => {
             (childInput) => {
                 childInput.disabled = false;
                 childInput.style.backgroundColor = "";
+                childInput.color = "";
                 childInput.value = "";
+                childInput.classList.remove('dancing_letters');
             }));
+    title.classList.remove('happy_letters');
+    notifications.classList.remove('happy_letters');
     notifications.innerText = "Can you guess the 5 letter word?";
     resetButton.hidden = true;
     resetCache(cache);
