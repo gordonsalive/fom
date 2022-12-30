@@ -24,9 +24,6 @@
 const data = { username: 'example' };
 */
 
-// TODO: jump to next input in attempt when they type a letter ( element.focus() )
-// TODO: add spinner while fetch is happening
-
 const attempts = document.querySelectorAll('.attempt');
 const allLetters = document.querySelectorAll('.letter');
 const notifications = document.querySelector('.notifications');
@@ -39,18 +36,24 @@ const resetCache = (cache) => {
     let attemptCount = 0;
     let todaysWord;
 
+    const addSpinner = (elem) => elem.classList.add('spinner');
+    const removeSpinner = (elem) => elem.classList.remove('spinner');
+
     const fetchTodaysWord = async () => {
         // const resp = await Promise.resolve({
         //     "word": "yells",
         //     // "word": "cater",
         //     "puzzleNumber": 267
         // });
+        addSpinner(title);
         try {
             const response = await fetch('https://words.dev-apis.com/word-of-the-day'); // simple GET fetch
             const data = await response.json();
             todaysWord = data.word.toUpperCase();
+            removeSpinner(title);
             return todaysWord;
         } catch (e) {
+            removeSpinner(title);
             throw 'error fetching word of the day. ' + e;
         }
     };
@@ -74,6 +77,7 @@ const resetCache = (cache) => {
             //     "word": "crane",
             //     "validWord": true
             // });
+            addSpinner(title);
             try {
                 const response = await fetch('https://words.dev-apis.com/validate-word', {
                     method: 'POST',
@@ -85,6 +89,8 @@ const resetCache = (cache) => {
                 return await response.json();
             } catch (e) {
                 throw 'error fetching if word is valid. ' + e;
+            } finally {
+                removeSpinner(title);
             }
         };
 
@@ -114,6 +120,25 @@ const letterKeyDownHandler = (event) => {
     if (!isLetter(event.key)) {
         event.preventDefault();
     }
+}
+const letterKeyUpHandler = (event) => {
+    // find the next empty letter in this attempt and focus on it - but allow navigation
+    const key = event.which || event.keyCode;
+    if ((key === 8) // backspace
+        || (key === 9) // tab
+        || (key === 46) // delete
+        || (key >= 35 && key <= 40) // end, home, arrows
+    ) {
+        return;
+    }
+    const attempt = event.target.parentNode;
+    const letters = Array.from(attempt.children).every(letter => {
+        if (letter.value.trim() === '') {
+            letter.focus();
+            return false;
+        }
+        return true;
+    });
 }
 
 const colourAttempt = (guess, todaysWord, attempt) => {
@@ -236,5 +261,6 @@ const resetPage = () => {
 
 allLetters.forEach((letter) => letter.onchange = letterChangeHandler);
 allLetters.forEach((letter) => letter.onkeydown = letterKeyDownHandler);
+allLetters.forEach((letter) => letter.onkeyup = letterKeyUpHandler);
 resetButton.onclick = () => resetPage();
 
