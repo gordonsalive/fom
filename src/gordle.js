@@ -116,6 +116,7 @@ const letterKeyDownHandler = (event) => {
     ) {
         return;
     }
+    // TODO: should also use is letter on the value of the input, to prevent multiple characters
     // otherwise only allow letters
     if (!isLetter(event.key)) {
         event.preventDefault();

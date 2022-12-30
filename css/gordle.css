@@ -153,8 +153,14 @@ button {
         rotate: 270deg;
     }
 }
+@keyframes spin {
+    /* to {
+        transform: rotate(360deg);
+    } */
+    to {
+        rotate: 360deg;
+    }
+}
 .spinner {
-    animation-name: spinning;
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
+    animation: spin 2s linear infinite;
 }
