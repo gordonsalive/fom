@@ -22,6 +22,11 @@
 **
 ** fetch API reference from (https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch):
 const data = { username: 'example' };
+**
+** TODO: this all would have been a lot simpler if I'd done all the work in keyDown instead on change.
+** TODO: I don't need to you key codes(!), the keys have names actions, e.g. 'Enter' -> onKeyDown(event)~event.key
+** TODO: instead of classList.add and remove, I could have used toggle('class', boolean)
+** TODO: I would have been a lot cleaner to use classes for correct and almost colouring |:-( 
 */
 
 const attempts = document.querySelectorAll('.attempt');
@@ -48,8 +53,8 @@ const resetCache = (cache) => {
         addSpinner(title);
         try {
             const response = await fetch('https://words.dev-apis.com/word-of-the-day'); // simple GET fetch
-            const data = await response.json();
-            todaysWord = data.word.toUpperCase();
+            const { word } = await response.json();
+            todaysWord = word.toUpperCase();
             removeSpinner(title);
             return todaysWord;
         } catch (e) {
