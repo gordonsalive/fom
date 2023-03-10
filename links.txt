@@ -3,5 +3,11 @@
 From the free front end masters intro to web dev course, but Brian Holt
 https://github.com/btholt/complete-intro-to-web-dev-v3
 
-Adobe Color palettes:
-https://color.adobe.com/explore
+Colours:
+Adobe Color palettes: https://color.adobe.com/explore
+https://cssgradient.io/
+
+Fonts:
+https://fonts.google.com
+https://fontpair.co
+https://fontawesome.com 
